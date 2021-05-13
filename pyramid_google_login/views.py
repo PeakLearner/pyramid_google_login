@@ -92,7 +92,13 @@ def signin_redirect(request):
              permission=NO_PERMISSION_REQUIRED)
 def callback(request):
     api = request.googleapi
-    redirect_uri = request.route_url('auth_callback')
+    settings = request.registry.settings
+    app_url = settings.get(SETTINGS_PREFIX + 'app_url')
+    if app_url is not None:
+        redirect_uri = request.route_url('auth_callback', _app_url=app_url)
+        print(redirect_uri)
+    else:
+        redirect_uri = request.route_url('auth_callback')
     try:
         oauth2_token = api.exchange_token_from_code(redirect_uri)
         userinfo = api.get_userinfo_from_token(oauth2_token)
