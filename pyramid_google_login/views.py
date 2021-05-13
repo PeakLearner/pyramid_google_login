@@ -5,7 +5,7 @@ from pyramid.view import view_config
 from pyramid.security import (remember, forget, NO_PERMISSION_REQUIRED)
 from pyramid.httpexceptions import HTTPFound
 
-from pyramid_google_login import redirect_to_signin, find_landing_path
+from pyramid_google_login import redirect_to_signin, find_landing_path, SETTINGS_PREFIX
 from pyramid_google_login.events import UserLoggedIn, UserLoggedOut
 from pyramid_google_login.exceptions import AuthFailed
 
@@ -66,8 +66,13 @@ def signin(request):
 def signin_redirect(request):
     print('signin redirect')
     googleapi = request.googleapi
-    redirect_uri = request.route_url('auth_callback')
-    print(redirect_uri)
+    settings = request.registry.settings
+    app_url = settings.get(SETTINGS_PREFIX + 'app_url')
+    if app_url is not None:
+        redirect_uri = request.route_url('auth_callback', _app_url=app_url)
+        print(redirect_uri)
+    else:
+        redirect_uri = request.route_url('auth_callback')
 
     state_params = {}
     if 'url' in request.params:

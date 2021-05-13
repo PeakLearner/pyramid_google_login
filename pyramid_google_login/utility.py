@@ -26,6 +26,7 @@ ApiSettings = namedtuple(
         signin_advice
         signin_banner
         user_id_field
+        app_url
     """
     )
 
@@ -199,6 +200,7 @@ def includeme(config):
             signin_advice=settings.get(prefix + 'signin_advice'),
             signin_banner=settings.get(prefix + 'signin_banner'),
             user_id_field=settings.get(prefix + 'user_id_field', 'email'),
+            app_url=settings[prefix + 'app_url']
             )
     except KeyError as err:
         log.error('Missing configuration setting: %s', err)
