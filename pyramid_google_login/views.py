@@ -64,13 +64,11 @@ def signin(request):
 @view_config(route_name='auth_signin_redirect',
              permission=NO_PERMISSION_REQUIRED,)
 def signin_redirect(request):
-    print('signin redirect')
     googleapi = request.googleapi
     settings = request.registry.settings
     app_url = settings.get(SETTINGS_PREFIX + 'app_url')
     if app_url is not None:
         redirect_uri = request.route_url('auth_callback', _app_url=app_url)
-        print(redirect_uri)
     else:
         redirect_uri = request.route_url('auth_callback')
 
@@ -96,7 +94,6 @@ def callback(request):
     app_url = settings.get(SETTINGS_PREFIX + 'app_url')
     if app_url is not None:
         redirect_uri = request.route_url('auth_callback', _app_url=app_url)
-        print(redirect_uri)
     else:
         redirect_uri = request.route_url('auth_callback')
     try:

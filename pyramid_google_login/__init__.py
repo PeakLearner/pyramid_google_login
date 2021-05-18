@@ -24,8 +24,13 @@ def redirect_to_signin(request, message=None, url=None, headers=None):
         query['message'] = message
     if url is not None:
         query['url'] = url
-    url = request.route_url('auth_signin', _query=query)
-    print('redirect to sign in', url)
+
+    settings = request.registry.settings
+    app_url = settings.get(SETTINGS_PREFIX + 'app_url')
+    if app_url is not None:
+        url = request.route_url('auth_signin', _query=query, _app_url=app_url)
+    else:
+        url = request.route_url('auth_signin', _query=query)
     return HTTPFound(location=url, headers=headers)
 
 
@@ -48,3 +53,8 @@ def find_landing_path(request):
             pass
 
     return '/'
+
+
+def get_app_url(request):
+    settings = request.registry.settings
+    return settings.get(SETTINGS_PREFIX + 'app_url')
